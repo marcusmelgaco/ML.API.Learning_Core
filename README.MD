@@ -6,6 +6,12 @@
 Essa é uma API feita para estabelecer conceitos aprendidos de Machine Learning e Algoritmos de Aprendizagem Supervisionada.
 
 
+## Depêndencias
+
+- python 3.9.10
+- catboost
+- xgboost
+- lightgbm
 
 ## Rodando a API
 
