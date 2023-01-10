@@ -1,7 +1,4 @@
-# API Predict Malignant Breat Cancer
-## API com métodos de ML e Algoritmos de Aprendizagem Supervisionada
-
-
+# API Com Conceitos de IA e Machine Learning
 
 Essa é uma API feita para estabelecer conceitos aprendidos de Machine Learning e Algoritmos de Aprendizagem Supervisionada.
 
