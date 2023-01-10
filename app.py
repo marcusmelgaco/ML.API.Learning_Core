@@ -20,7 +20,7 @@ def validateAccuracyAlgorithms():
     return make_response(result_algorithm, 200);
 
 @app.route('/api/v1/predict-result', methods=['POST'])
-def predictResult():    
+def predictResult():
     req = request.json;
     
     result_algorithm = LC.predictResult(req['config'], req['data']);
