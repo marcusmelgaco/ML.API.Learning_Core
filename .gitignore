@@ -1,0 +1,13 @@
+catboost_info
+catboost_training
+catboost_info/catboost_training.json
+catboost_info/learn_error.tsv
+catboost_info/time_left.tsv
+catboost_info/learn/events.out.tfevents
+catboost_info/test/events.out.tfevents
+learning_core/__pycache__/
+learning_core/algorithms/supervised_learning/regression/__pycache__/
+learning_core/data/Model/__pycache__/
+learning_core/algorithms/supervised_learning/__pycache__/
+catboost_info/learn/events.out.tfevents
+catboost_info/test/events.out.tfevents

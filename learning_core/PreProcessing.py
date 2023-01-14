@@ -13,10 +13,13 @@ class PreProcessingData():
     
     path = os.path.dirname(__file__);
     
-    def getForecastersAndTarget(self, arquive, sep, initital_predictors_column_number, num_final_columns_forecasters, num_column_target = 1):
+    def getForecastersAndTarget(self, arquive, sep, initital_predictors_column_number, num_final_columns_forecasters, num_column_target = 1, categoricals_vars = []):
         dataFrame = pd.read_csv(self.path+arquive, sep=sep, encoding='utf-8');
         dataFrameOfficial = pd.DataFrame.copy(dataFrame);
-        dataFrameOfficial['diagnosis'].replace({'B': 0, 'M': 1}, inplace=True);
+        
+        if(len(categoricals_vars)):
+            for categorical in categoricals_vars:
+                dataFrameOfficial[categorical['name']].replace(categorical['replacement'], inplace=True);
     
         self.forecasters = dataFrameOfficial.iloc[:, initital_predictors_column_number:num_final_columns_forecasters].values;
         self.target = dataFrameOfficial.iloc[:, num_column_target].values;

@@ -2,35 +2,19 @@ import json as json;
 import pandas as pd
 from sklearn.model_selection import train_test_split;
 from learning_core import PreProcessing as PP;
-from learning_core.algorithms.supervised_learning import NaiveBayes;
-from learning_core.algorithms.supervised_learning import SVM;
-from learning_core.algorithms.supervised_learning import LogisticRegression;
-from learning_core.algorithms.supervised_learning import KNN;
-from learning_core.algorithms.supervised_learning import DecisionTree;
-from learning_core.algorithms.supervised_learning import RandomForest;
-from learning_core.algorithms.supervised_learning import XGBoost;
-from learning_core.algorithms.supervised_learning import LGBM;
-from learning_core.algorithms.supervised_learning import CatBoost;
-from learning_core.algorithms.supervised_learning import index as SupervisedLearning;
+from learning_core.algorithms.supervised_learning.classifier import index as SupervisedLearningClassifier;
+from learning_core.algorithms.supervised_learning.regression import index as SupervisedLearningRegression;
 from learning_core.data.Model import BreastCancer ;
+from learning_core.data.Model import Housing ;
 
 
 PPD = PP.PreProcessingData();
+SupervisedLearningClassifier = SupervisedLearningClassifier.SupervisedLearningClassifier();
+SupervisedLearningRegression = SupervisedLearningRegression.SupervisedLearningRegression();
 
-SupervisedLearning = SupervisedLearning.SupervisedLearning();
-NBAlgorithm = NaiveBayes.NaiveBayesAlgorithm();
-SVM = SVM.SVMAlgorithm();
-LogisticRegression = LogisticRegression.LogisticRegressionAlgorithm();
-KNN = KNN.KNNAlgorithm();
-DecisionTree = DecisionTree.DecisionTreeAlgorithm();
-RandomForest = RandomForest.RandomForestAlgorithm();
-XGBoost = XGBoost.XGBoostAlgorithm();
-LGBM = LGBM.LGBMAlgorithm();
-CatBoost = CatBoost.CatBoostAlgorithm();
 BreastCancerConfig = BreastCancer.BreastCancerConfig();
+HousingConfig = Housing.HousingConfig();
 
-
-print(BreastCancerConfig.output);
 class LerningCore():
     x_training = [];
     x_test = [];
@@ -58,7 +42,7 @@ class LerningCore():
     
     def preProcessingData(self, modelName, typeData):
         params = self.recoveFileInformation(modelName);
-        self.data_frame_official = PPD.getForecastersAndTarget(params['arquive'], params['sep'], params['initital_predictors_column_number'], params['num_final_columns_forecasters'], params['num_column_target']);
+        self.data_frame_official = PPD.getForecastersAndTarget(params['arquive'], params['sep'], params['initital_predictors_column_number'], params['num_final_columns_forecasters'], params['num_column_target'], params['categorical_vars']);
         
         self.defineTrainningAndTestBase(typeData);
     
@@ -66,6 +50,7 @@ class LerningCore():
         self.preProcessingData(modelName, typeData)
         
         methodLearning = self.getMethodLearning(method);
+        print('[LEARNING] - ', methodLearning);
         methodLearning.init({
             "x_training" : self.x_training,
             "x_test" : self.x_test,
@@ -83,6 +68,8 @@ class LerningCore():
         model = {};
         if(modelName == 'BreastCancer'):
             model = BreastCancerConfig;
+        elif(modelName == 'Housing'):
+            model = HousingConfig;
         else: return [];
         
         return model.serializeDataFrameIntoJson(dataFrame);
@@ -92,6 +79,8 @@ class LerningCore():
         
         if(modelName == 'BreastCancer'):
             model = BreastCancerConfig;
+        elif(modelName == 'Housing'):
+            model = HousingConfig;
             
         if(model):
             return {
@@ -99,7 +88,8 @@ class LerningCore():
                 'sep': model.separator,
                 'initital_predictors_column_number': model.initital_predictors_column_number,
                 'num_final_columns_forecasters': model.num_final_columns_forecasters,
-                'num_column_target': model.num_column_target,   
+                'num_column_target': model.num_column_target, 
+                'categorical_vars': model.categorical_vars
             }
         else:
             return {};
@@ -117,7 +107,14 @@ class LerningCore():
         return PPD.target;
     
     def getMethodLearning(self, method):
-        return SupervisedLearning if method == 'supervised' else {}
+        methodLearning = {};
+        
+        if(method == "supervised_classifier"):
+            methodLearning = SupervisedLearningClassifier
+        elif(method == "supervised_regression"):
+            methodLearning = SupervisedLearningRegression
+        
+        return methodLearning
     
     def getModel(self, modelName):
         model = {};

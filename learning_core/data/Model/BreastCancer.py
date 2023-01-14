@@ -34,6 +34,13 @@ class BreastCancerConfig():
     
     output = "diagnosis"
     
+    categorical_vars = [
+        {
+            "name": "diagnosis",
+            "replacement": {'B': 0, 'M': 1}
+        },
+    ]
+    
     num_registers = 569;
     initital_predictors_column_number = 2;
     num_final_columns_forecasters = 32;
@@ -42,7 +49,7 @@ class BreastCancerConfig():
     arquive = 'data_cancer2.csv'
     
     def resultDataFrameIntoJson(self, data_frame):
-        result = { "diagnosis": []};
+        result = { "diagnosis": [] };
         
         for data in data_frame:
             objectResponse = { 'BreastCancer' : '' };

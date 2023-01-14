@@ -1,12 +1,12 @@
-from learning_core.algorithms.supervised_learning import NaiveBayes;
-from learning_core.algorithms.supervised_learning import SVM;
-from learning_core.algorithms.supervised_learning import LogisticRegression;
-from learning_core.algorithms.supervised_learning import KNN;
-from learning_core.algorithms.supervised_learning import DecisionTree;
-from learning_core.algorithms.supervised_learning import RandomForest;
-from learning_core.algorithms.supervised_learning import XGBoost;
-from learning_core.algorithms.supervised_learning import LGBM;
-from learning_core.algorithms.supervised_learning import CatBoost;
+from learning_core.algorithms.supervised_learning.classifier import NaiveBayes;
+from learning_core.algorithms.supervised_learning.classifier import SVM;
+from learning_core.algorithms.supervised_learning.classifier import LogisticRegression;
+from learning_core.algorithms.supervised_learning.classifier import KNN;
+from learning_core.algorithms.supervised_learning.classifier import DecisionTree;
+from learning_core.algorithms.supervised_learning.classifier import RandomForest;
+from learning_core.algorithms.supervised_learning.classifier import XGBoost;
+from learning_core.algorithms.supervised_learning.classifier import LGBM;
+from learning_core.algorithms.supervised_learning.classifier import CatBoost;
 
 NaiveBayes = NaiveBayes.NaiveBayesAlgorithm();
 SVM = SVM.SVMAlgorithm();
@@ -18,7 +18,7 @@ XGBoost = XGBoost.XGBoostAlgorithm();
 LGBM = LGBM.LGBMAlgorithm();
 CatBoost = CatBoost.CatBoostAlgorithm();
 
-class SupervisedLearning():
+class SupervisedLearningClassifier():
     x_training = [];
     x_test = [];
     y_training = [];
@@ -107,46 +107,46 @@ class SupervisedLearning():
         return model.predict(data)
     
     def NaiveBayesAlgorithmValidate(self):
-        NaiveBayes.learning(self.x_trainning, self.y_trainning);
+        NaiveBayes.learning(self.x_training, self.y_training);
         NaiveBayes.predict(self.x_test, self.y_test);
         return NaiveBayes.validateAlgorithm(self.predictors, self.target);
 
     def SVMAlgorithmValidate(self):
-        SVM.learning(self.x_trainning, self.y_trainning);
+        SVM.learning(self.x_training, self.y_training);
         SVM.predict(self.x_test, self.y_test);
         return SVM.validateAlgorithm(self.predictors, self.target);
     
     def LogisticRegressionAlgorithmValidate(self):
-        LogisticRegression.learning(self.x_trainning, self.y_trainning);
+        LogisticRegression.learning(self.x_training, self.y_training);
         LogisticRegression.predict(self.x_test, self.y_test);
         return LogisticRegression.validateAlgorithm(self.predictors, self.target);
     
     def KNNAlgorithmValidate(self):
-        KNN.learning(self.x_trainning, self.y_trainning);
+        KNN.learning(self.x_training, self.y_training);
         KNN.predict(self.x_test, self.y_test);
         return KNN.validateAlgorithm(self.predictors, self.target);
     
     def DecisionTreeAlgorithmValidate(self):
-        DecisionTree.learning(self.x_trainning, self.y_trainning);
+        DecisionTree.learning(self.x_training, self.y_training);
         DecisionTree.predict(self.x_test, self.y_test);
         return DecisionTree.validateAlgorithm(self.predictors, self.target);
     
     def RandomForestAlgorithmValidate(self):
-        RandomForest.learning(self.x_trainning, self.y_trainning);
+        RandomForest.learning(self.x_training, self.y_training);
         RandomForest.predict(self.x_test, self.y_test);
         return RandomForest.validateAlgorithm(self.predictors, self.target);
     
     def XGBoostAlgorithmValidate(self):
-        XGBoost.learning(self.x_trainning, self.y_trainning);
+        XGBoost.learning(self.x_training, self.y_training);
         XGBoost.predict(self.x_test, self.y_test);
         return XGBoost.validateAlgorithm(self.predictors, self.target);
     
     def LGBMAlgorithmValidate(self):
-        LGBM.learning(self.x_trainning, self.y_trainning);
+        LGBM.learning(self.x_training, self.y_training);
         LGBM.predict(self.x_test, self.y_test);
         return LGBM.validateAlgorithm(self.predictors, self.target);
     
     def CatBoostAlgorithmValidate(self):
-        CatBoost.learning(self.x_trainning, self.y_trainning);
+        CatBoost.learning(self.x_training, self.y_training);
         CatBoost.predict(self.x_test, self.y_test);
         return CatBoost.validateAlgorithm(self.predictors, self.target);
