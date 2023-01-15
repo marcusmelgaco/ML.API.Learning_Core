@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, make_response
 from learning_core import index as learning_core
+from validate.index import ValidateRoutes;
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -22,8 +23,13 @@ def validateAccuracyAlgorithms():
 @app.route('/api/v1/predict-result', methods=['POST'])
 def predictResult():
     req = request.json;
+    validateRoute = ValidateRoutes.validate(self=ValidateRoutes, endpoint="predict-result", body=req['config']);
+    
+    if( validateRoute != True):
+        return make_response(validateRoute, 500);
     
     result_algorithm = LC.predictResult(req['config'], req['data']);
+
     return make_response(result_algorithm, 200);
 
 

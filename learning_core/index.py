@@ -6,6 +6,7 @@ from learning_core.algorithms.supervised_learning.classifier import index as Sup
 from learning_core.algorithms.supervised_learning.regression import index as SupervisedLearningRegression;
 from learning_core.data.Model import BreastCancer ;
 from learning_core.data.Model import Housing ;
+from learning_core.data.Model import MedicalCost ;
 
 
 PPD = PP.PreProcessingData();
@@ -14,6 +15,7 @@ SupervisedLearningRegression = SupervisedLearningRegression.SupervisedLearningRe
 
 BreastCancerConfig = BreastCancer.BreastCancerConfig();
 HousingConfig = Housing.HousingConfig();
+MedicalCostConfig = MedicalCost.MedicalCostConfig();
 
 class LerningCore():
     x_training = [];
@@ -37,12 +39,13 @@ class LerningCore():
             "y_test" : self.y_test,
             "predictors" : self.getPredictors(config['typeData']),
             "target" : PPD.target,
-        });
+        });        
+        
         return model.resultDataFrameIntoJson(methodLearning.predictResult(config['algorithm'],pd.read_json(json.dumps(data))))
     
     def preProcessingData(self, modelName, typeData):
         params = self.recoveFileInformation(modelName);
-        self.data_frame_official = PPD.getForecastersAndTarget(params['arquive'], params['sep'], params['initital_predictors_column_number'], params['num_final_columns_forecasters'], params['num_column_target'], params['categorical_vars']);
+        self.data_frame_official = PPD.getForecastersAndTarget(params['arquive'], params['sep'], params['initital_predictors_column_number'], params['num_final_columns_forecasters'], params['num_column_target'], params['categorical_vars'], params['dummy_vars']);
         
         self.defineTrainningAndTestBase(typeData);
     
@@ -65,22 +68,12 @@ class LerningCore():
         return self.result_algorithm;   
     
     def recoveData(self, modelName, dataFrame):
-        model = {};
-        if(modelName == 'BreastCancer'):
-            model = BreastCancerConfig;
-        elif(modelName == 'Housing'):
-            model = HousingConfig;
-        else: return [];
+        model = self.getModel(modelName);
         
         return model.serializeDataFrameIntoJson(dataFrame);
     
     def recoveFileInformation(self, modelName):
-        model = {};
-        
-        if(modelName == 'BreastCancer'):
-            model = BreastCancerConfig;
-        elif(modelName == 'Housing'):
-            model = HousingConfig;
+        model = self.getModel(modelName);
             
         if(model):
             return {
@@ -89,7 +82,8 @@ class LerningCore():
                 'initital_predictors_column_number': model.initital_predictors_column_number,
                 'num_final_columns_forecasters': model.num_final_columns_forecasters,
                 'num_column_target': model.num_column_target, 
-                'categorical_vars': model.categorical_vars
+                'categorical_vars': model.categorical_vars,
+                'dummy_vars': model.dummy_vars,
             }
         else:
             return {};
@@ -119,6 +113,10 @@ class LerningCore():
     def getModel(self, modelName):
         model = {};
         if(modelName == 'BreastCancer'):
-            model = BreastCancerConfig;
+            model = BreastCancerConfig
+        elif(modelName == 'Housing'):
+            model = HousingConfig
+        elif(modelName == 'MedicalCost'):
+            model = MedicalCostConfig
         
         return model;

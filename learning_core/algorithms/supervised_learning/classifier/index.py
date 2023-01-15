@@ -7,6 +7,7 @@ from learning_core.algorithms.supervised_learning.classifier import RandomForest
 from learning_core.algorithms.supervised_learning.classifier import XGBoost;
 from learning_core.algorithms.supervised_learning.classifier import LGBM;
 from learning_core.algorithms.supervised_learning.classifier import CatBoost;
+from learning_core.algorithms.supervised_learning.classifier.ANN import MLPClassifier;
 
 NaiveBayes = NaiveBayes.NaiveBayesAlgorithm();
 SVM = SVM.SVMAlgorithm();
@@ -17,6 +18,7 @@ RandomForest = RandomForest.RandomForestAlgorithm();
 XGBoost = XGBoost.XGBoostAlgorithm();
 LGBM = LGBM.LGBMAlgorithm();
 CatBoost = CatBoost.CatBoostAlgorithm();
+MLPClassifier = MLPClassifier.MLPClassifierAlgorithm();
 
 class SupervisedLearningClassifier():
     x_training = [];
@@ -66,6 +68,9 @@ class SupervisedLearningClassifier():
         #CatBoost
         algorithm_predict_infos['CatBoost'] = self.CatBoostAlgorithmValidate();
         
+        #MLPClassifier
+        algorithm_predict_infos['MLPClassifier'] = self.MLPClassifierAlgorithmValidate();
+        
         return algorithm_predict_infos;
     
     def defineModel(self, modelName):
@@ -89,6 +94,8 @@ class SupervisedLearningClassifier():
             model = SVM;
         elif(modelName == "XGBoost"):
             model = XGBoost;
+        elif(modelName == "ANN.MLP"):
+            model = MLPClassifier;
         
         return model;
     
@@ -150,3 +157,10 @@ class SupervisedLearningClassifier():
         CatBoost.learning(self.x_training, self.y_training);
         CatBoost.predict(self.x_test, self.y_test);
         return CatBoost.validateAlgorithm(self.predictors, self.target);
+    
+    MLPClassifier
+    
+    def MLPClassifierAlgorithmValidate(self):
+        MLPClassifier.learning(self.x_training, self.y_training);
+        MLPClassifier.predict(self.x_test, self.y_test);
+        return MLPClassifier.validateAlgorithm(self.predictors, self.target);

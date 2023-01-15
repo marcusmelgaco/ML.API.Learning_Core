@@ -5,6 +5,7 @@ from learning_core.algorithms.supervised_learning.regression import RandomForest
 from learning_core.algorithms.supervised_learning.regression import XGBoost;
 from learning_core.algorithms.supervised_learning.regression import LGBM;
 from learning_core.algorithms.supervised_learning.regression import CatBoost;
+from learning_core.algorithms.supervised_learning.regression.ANN import MLPRegressor;
 
 
 LinearRegression = LinearRegression.LinearRegressionAlgorithm();
@@ -14,7 +15,7 @@ RandomForest = RandomForest.RandomForestAlgorithm();
 XGBoost = XGBoost.XGBoostAlgorithm();
 LGBM = LGBM.LGBMAlgorithm();
 CatBoost = CatBoost.CatBoostAlgorithm();
-
+MLPRegressor = MLPRegressor.MLPRegressorAlgorithm();
 class SupervisedLearningRegression():
     x_training = [];
     x_test = [];
@@ -57,6 +58,9 @@ class SupervisedLearningRegression():
         # CatBoost        
         algorithm_predict_infos['CatBoost'] = self.CatBoostAlgorithm();
         
+        # MLPRegressor        
+        algorithm_predict_infos['MLPRegressor'] = self.MLPRegressorAlgorithm();
+        
 
         return algorithm_predict_infos;
     
@@ -67,6 +71,18 @@ class SupervisedLearningRegression():
             model = LinearRegression;
         elif(modelName == "SVR"):
             model = SVR;
+        elif(modelName == "DecisionTree"):
+            model = DecisionTree
+        elif(modelName == "RandomForest"):
+            model = RandomForest
+        elif(modelName == "XGBoost"):
+            model = XGBoost
+        elif(modelName == "LGBM"):
+            model = LGBM
+        elif(modelName == "CatBoost"):
+            model = CatBoost
+        elif(modelName == "ANN.MLP"):
+            model = MLPRegressor
         
         
         return model;
@@ -119,4 +135,9 @@ class SupervisedLearningRegression():
         CatBoost.learning(self.x_training, self.y_training);
         CatBoost.predict(self.x_test, self.y_test);
         return CatBoost.validateAlgorithm(self.predictors, self.target);
+    
+    def MLPRegressorAlgorithm(self):
+        MLPRegressor.learning(self.x_training, self.y_training);
+        MLPRegressor.predict(self.x_test, self.y_test);
+        return MLPRegressor.validateAlgorithm(self.predictors, self.target);
     

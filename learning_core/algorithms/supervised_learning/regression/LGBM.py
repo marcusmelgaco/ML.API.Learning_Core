@@ -43,7 +43,9 @@ class LGBMAlgorithm:
     def predict(self, x_test, y_test=[]):
         self.x_test = x_test;
         self.y_test = y_test;
-        self.determination_coefficient_test = lgb.score(self.x_test, self.y_test);
+        
+        if(len(y_test)):
+            self.determination_coefficient_test = lgb.score(self.x_test, self.y_test);
 
         self.predict_test = lgb.predict(x_test);
         

@@ -45,7 +45,8 @@ class XGBoostAlgorithm():
     def predict(self, x_test, y_test=[]):
         self.x_test = x_test;
         self.y_test = y_test;
-        self.determination_coefficient_test = xg.score(self.x_test, self.y_test);
+        if(len(y_test)):
+            self.determination_coefficient_test = xg.score(self.x_test, self.y_test);
 
         self.predict_test = xg.predict(x_test);
         

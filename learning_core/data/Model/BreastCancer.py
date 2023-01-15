@@ -41,6 +41,8 @@ class BreastCancerConfig():
         },
     ]
     
+    dummy_vars = [];
+    
     num_registers = 569;
     initital_predictors_column_number = 2;
     num_final_columns_forecasters = 32;

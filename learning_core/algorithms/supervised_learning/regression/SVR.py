@@ -57,7 +57,8 @@ class SVRAlgorithm:
         
         self.scaleData('test');
         
-        self.determination_coefficient_test = svr.score(self.x_test_scaler, self.y_test_scaler);
+        if(len(y_test)):
+            self.determination_coefficient_test = svr.score(self.x_test_scaler, self.y_test_scaler);
 
         self.predict_test = svr.predict(self.x_test_scaler);
         
@@ -77,7 +78,7 @@ class SVRAlgorithm:
         self.forecasters_base_scaler = x_scaler_validate.fit_transform(self.forecasters_base);
         self.target_base_scaler = y_scaler_validate.fit_transform(self.target_base.reshape(-1,1));
         
-        self.predict_test = y_scaler.inverse_transform(self.predict_test.reshape(-1, 1))
+        self.predict_test = y_scaler.inverse_transform(self.predict_test.reshape(-1, 1));
         
         self.predict_training = svr.predict(self.x_training_scaler);
         #self.accuracy_training = accuracy_score(self.y_training, self.predict_training) * 100.0;
