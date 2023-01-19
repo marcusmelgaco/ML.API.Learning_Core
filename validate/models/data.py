@@ -2,7 +2,8 @@ class DataModel():
     data = [
         "BreastCancer",
         "Housing",
-        "MedicalCost"
+        "MedicalCost",
+        "WineClustering"
     ]
     
     def validate(self, value):

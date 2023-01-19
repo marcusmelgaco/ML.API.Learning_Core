@@ -18,6 +18,7 @@ def validateAccuracyAlgorithms():
     req = request.json;
     
     result_algorithm = LC.validateAlgorithms(modelName=req['modelName'], typeData=req['typeData'], method=req['method']); 
+
     return make_response(result_algorithm, 200);
 
 @app.route('/api/v1/predict-result', methods=['POST'])
@@ -25,8 +26,8 @@ def predictResult():
     req = request.json;
     validateRoute = ValidateRoutes.validate(self=ValidateRoutes, endpoint="predict-result", body=req['config']);
     
-    if( validateRoute != True):
-        return make_response(validateRoute, 500);
+    if(validateRoute != True):
+        return make_response(validateRoute, 400);
     
     result_algorithm = LC.predictResult(req['config'], req['data']);
 

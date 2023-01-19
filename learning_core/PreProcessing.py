@@ -8,13 +8,14 @@ from sklearn.compose import ColumnTransformer
 class PreProcessingData():
     forecasters = [];
     forecasters_esc = [];
-    forecasters_dummy_esc = []
+    forecasters_dummy_esc = [];
+    attributes = [];
     
     target = [];
     
     path = os.path.dirname(__file__);
     
-    def getForecastersAndTarget(self, arquive, sep, initital_predictors_column_number, num_final_columns_forecasters, num_column_target = 1, categoricals_vars = [], dummy_vars = []):
+    def getForecastersAndTarget(self, arquive, sep, initital_attributes_column_number, num_final_columns_attributes, num_column_target = 1, categoricals_vars = [], dummy_vars = []):
         dataFrame = pd.read_csv(self.path+arquive, sep=sep, encoding='utf-8');
         dataFrameOfficial = pd.DataFrame.copy(dataFrame);
         
@@ -22,7 +23,8 @@ class PreProcessingData():
             for categorical in categoricals_vars:
                 dataFrameOfficial[categorical['name']].replace(categorical['replacement'], inplace=True);
     
-        self.forecasters = dataFrameOfficial.iloc[:, initital_predictors_column_number:num_final_columns_forecasters].values;
+        self.attributes = dataFrameOfficial.iloc[:, initital_attributes_column_number:num_final_columns_attributes];
+        self.forecasters = dataFrameOfficial.iloc[:, initital_attributes_column_number:num_final_columns_attributes].values;
         self.target = dataFrameOfficial.iloc[:, num_column_target].values;
         
         #self.transformCategoricalVariables();

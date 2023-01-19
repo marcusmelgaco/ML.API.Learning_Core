@@ -1,4 +1,5 @@
 class HousingConfig():
+    type = "supervised";
     inputs = [
         'RM',
         'LSTAT',
@@ -11,8 +12,8 @@ class HousingConfig():
     dummy_vars = []
     
     num_registers = 489;
-    initital_predictors_column_number = 0;
-    num_final_columns_forecasters = 3;
+    initital_attributes_column_number = 0;
+    num_final_columns_attributes = 3;
     num_column_target = 3;
     separator = ',';
     arquive = 'housing.csv'

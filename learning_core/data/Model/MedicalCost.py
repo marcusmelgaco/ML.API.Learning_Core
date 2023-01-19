@@ -1,4 +1,5 @@
 class MedicalCostConfig():
+    type = "supervised";
     inputs = [
         "age",
         "sex",
@@ -23,8 +24,8 @@ class MedicalCostConfig():
     dummy_vars = [5];
     
     num_registers = 1338;
-    initital_predictors_column_number = 0;
-    num_final_columns_forecasters = 6;
+    initital_attributes_column_number = 0;
+    num_final_columns_attributes = 6;
     num_column_target = 6;
     separator = ',';
     arquive = 'insurance.csv'

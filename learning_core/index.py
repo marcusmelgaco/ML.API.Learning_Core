@@ -4,18 +4,23 @@ from sklearn.model_selection import train_test_split;
 from learning_core import PreProcessing as PP;
 from learning_core.algorithms.supervised_learning.classifier import index as SupervisedLearningClassifier;
 from learning_core.algorithms.supervised_learning.regression import index as SupervisedLearningRegression;
+from learning_core.algorithms.unsupervised_learning.grouping import index as UnsupervisedLearningGrouping;
 from learning_core.data.Model import BreastCancer ;
 from learning_core.data.Model import Housing ;
 from learning_core.data.Model import MedicalCost ;
+from learning_core.data.Model import WineClustering;
 
 
 PPD = PP.PreProcessingData();
+
 SupervisedLearningClassifier = SupervisedLearningClassifier.SupervisedLearningClassifier();
 SupervisedLearningRegression = SupervisedLearningRegression.SupervisedLearningRegression();
+UnsupervisedLearningGrouping = UnsupervisedLearningGrouping.UnsupervisedLearningGrouping();
 
 BreastCancerConfig = BreastCancer.BreastCancerConfig();
 HousingConfig = Housing.HousingConfig();
 MedicalCostConfig = MedicalCost.MedicalCostConfig();
+WineClusteringConfig = WineClustering.WineClusteringConfig();
 
 class LerningCore():
     x_training = [];
@@ -23,76 +28,83 @@ class LerningCore():
     y_training = [];
     y_test = [];
     
+    model_data = {};
+    type_data = "";
+    
     data_frame_official = [];
+    
+    method_learning = {};
     
     result_algorithm = { 'data' : [] };
     
     def predictResult(self, config, data):
-        model = self.getModel(config['modelName'])
-        self.preProcessingData(config['modelName'], config['typeData']);
+        self.model_data = self.getModel(config['modelName']);
+        self.type_data = config['typeData'];
         
-        methodLearning = self.getMethodLearning(config['method']);
-        methodLearning.init({
-            "x_training" : self.x_training,
-            "x_test" : self.x_test,
-            "y_training" : self.y_training,
-            "y_test" : self.y_test,
-            "predictors" : self.getPredictors(config['typeData']),
-            "target" : PPD.target,
-        });        
+        self.preProcessingData(config['modelName']);
+        self.getMethodLearning(config['method']);
+        self.initMethodLeaning();
         
-        return model.resultDataFrameIntoJson(methodLearning.predictResult(config['algorithm'],pd.read_json(json.dumps(data))))
+        return self.model_data.resultDataFrameIntoJson(self.method_learning.predictResult(config['algorithm'],pd.read_json(json.dumps(data))))
     
-    def preProcessingData(self, modelName, typeData):
-        params = self.recoveFileInformation(modelName);
-        self.data_frame_official = PPD.getForecastersAndTarget(params['arquive'], params['sep'], params['initital_predictors_column_number'], params['num_final_columns_forecasters'], params['num_column_target'], params['categorical_vars'], params['dummy_vars']);
+    def preProcessingData(self, modelName):
+        params = self.recoveFileInformation();
+        self.data_frame_official = PPD.getForecastersAndTarget(params['arquive'], params['sep'], params['initital_attributes_column_number'], params['num_final_columns_attributes'], params['num_column_target'], params['categorical_vars'], params['dummy_vars']);
         
-        self.defineTrainningAndTestBase(typeData);
+        self.defineTrainningAndTestBase();
     
-    def validateAlgorithms(self,modelName, typeData, method):
-        self.preProcessingData(modelName, typeData)
+    def validateAlgorithms(self, modelName, typeData, method):
+        self.model_data = self.getModel(modelName);
+        self.type_data = typeData;
         
-        methodLearning = self.getMethodLearning(method);
-        print('[LEARNING] - ', methodLearning);
-        methodLearning.init({
-            "x_training" : self.x_training,
-            "x_test" : self.x_test,
-            "y_training" : self.y_training,
-            "y_test" : self.y_test,
-            "predictors" : self.getPredictors(typeData),
-            "target" : PPD.target,
-        });
-        self.result_algorithm['algorithms'] = methodLearning.validateAlgorithms(); 
-        self.result_algorithm['data'] = self.recoveData(modelName, self.data_frame_official);
+        self.preProcessingData(modelName)
+        self.getMethodLearning(method);
+        self.initMethodLeaning();
+        
+        self.result_algorithm['algorithms'] = self.method_learning.validateAlgorithms(); 
+        self.result_algorithm['data'] = self.recoveData(self.data_frame_official);
 
         return self.result_algorithm;   
     
-    def recoveData(self, modelName, dataFrame):
-        model = self.getModel(modelName);
-        
-        return model.serializeDataFrameIntoJson(dataFrame);
+    def initMethodLeaning(self):
+        if(self.model_data.type == "supervised"):
+            self.method_learning.init({
+                "x_training" : self.x_training,
+                "x_test" : self.x_test,
+                "y_training" : self.y_training,
+                "y_test" : self.y_test,
+                "predictors" : self.getPredictors(),
+                "target" : PPD.target,
+            });
+        elif(self.model_data.type == "unsupervised"):
+            self.method_learning.init({
+                "attributes" : self.getPredictors(),
+                "attributes_original": PPD.attributes,
+                "model": self.model_data
+            });
     
-    def recoveFileInformation(self, modelName):
-        model = self.getModel(modelName);
-            
-        if(model):
+    def recoveData(self, dataFrame):
+        return self.model_data.serializeDataFrameIntoJson(dataFrame);
+    
+    def recoveFileInformation(self): 
+        if(self.model_data):
             return {
-                'arquive': '/data/'+ model.arquive,
-                'sep': model.separator,
-                'initital_predictors_column_number': model.initital_predictors_column_number,
-                'num_final_columns_forecasters': model.num_final_columns_forecasters,
-                'num_column_target': model.num_column_target, 
-                'categorical_vars': model.categorical_vars,
-                'dummy_vars': model.dummy_vars,
+                'arquive': '/data/'+ self.model_data.arquive,
+                'sep': self.model_data.separator,
+                'initital_attributes_column_number': self.model_data.initital_attributes_column_number,
+                'num_final_columns_attributes': self.model_data.num_final_columns_attributes,
+                'num_column_target': self.model_data.num_column_target, 
+                'categorical_vars': self.model_data.categorical_vars,
+                'dummy_vars': self.model_data.dummy_vars,
             }
         else:
             return {};
     
-    def defineTrainningAndTestBase(self, base):
-        self.x_training, self.x_test, self.y_training, self.y_test = train_test_split(self.getPredictors(base), self.getTarget(), test_size = 0.3, random_state = 0)
+    def defineTrainningAndTestBase(self):
+        self.x_training, self.x_test, self.y_training, self.y_test = train_test_split(self.getPredictors(), self.getTarget(), test_size = 0.3, random_state = 0)
     
-    def getPredictors(self, base):
-        return PPD.forecasters if base == 'normal' else PPD.forecasters_esc;
+    def getPredictors(self):
+        return PPD.forecasters if self.type_data == 'normal' else PPD.forecasters_esc;
     
     def getPredictosEsc(self):
         return PPD.forecasters_esc;
@@ -101,14 +113,12 @@ class LerningCore():
         return PPD.target;
     
     def getMethodLearning(self, method):
-        methodLearning = {};
-        
         if(method == "supervised_classifier"):
-            methodLearning = SupervisedLearningClassifier
+            self.method_learning = SupervisedLearningClassifier
         elif(method == "supervised_regression"):
-            methodLearning = SupervisedLearningRegression
-        
-        return methodLearning
+            self.method_learning = SupervisedLearningRegression
+        elif(method == "unsupervised_grouping"):
+            self.method_learning = UnsupervisedLearningGrouping
     
     def getModel(self, modelName):
         model = {};
@@ -118,5 +128,7 @@ class LerningCore():
             model = HousingConfig
         elif(modelName == 'MedicalCost'):
             model = MedicalCostConfig
+        elif(modelName == 'WineClustering'):
+            model = WineClusteringConfig
         
         return model;

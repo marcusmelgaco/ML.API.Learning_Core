@@ -24,6 +24,9 @@ class AlgorithmsModel():
             "SVM",
             "XGBoost",
             "ANN.MLP",
+        ],
+        "unsupervised_grouping": [
+            "Kmeans"
         ]
     };
     

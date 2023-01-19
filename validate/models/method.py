@@ -2,6 +2,7 @@ class MethodModel():
     method = [
         "supervised_regression",
         "supervised_classifier",
+        "unsupervised_grouping"
     ]
     
     def validate(self, value):

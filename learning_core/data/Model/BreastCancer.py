@@ -1,4 +1,5 @@
 class BreastCancerConfig():
+    type = "supervised";
     inputs = [
         'radius_mean',
         'texture_mean',
@@ -44,8 +45,8 @@ class BreastCancerConfig():
     dummy_vars = [];
     
     num_registers = 569;
-    initital_predictors_column_number = 2;
-    num_final_columns_forecasters = 32;
+    initital_attributes_column_number = 2;
+    num_final_columns_attributes = 32;
     num_column_target = 1;
     separator = ',';
     arquive = 'data_cancer2.csv'
